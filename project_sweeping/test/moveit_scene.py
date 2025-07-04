@@ -23,9 +23,9 @@ CONFIG = {"renderer": "RayTracedLighting", "headless": False}
 
 simulation_app = SimulationApp(CONFIG)
 
-from KTH.project_sweeping.asset.ur3 import UR3
-from KTH.project_sweeping.src.project_utils import tf_matrices_from_pose, get_local_from_world
-from KTH.project_sweeping.src.robot_controller import ArmController
+from IsaacLab_sim2sim.project_sweeping.asset.ur3 import UR3
+from IsaacLab_sim2sim.project_sweeping.src.project_utils import tf_matrices_from_pose, get_local_from_world
+from IsaacLab_sim2sim.project_sweeping.src.robot_controller import ArmController
 
 from omni.isaac.core import World, SimulationContext
 from omni.isaac.core.prims import RigidPrim

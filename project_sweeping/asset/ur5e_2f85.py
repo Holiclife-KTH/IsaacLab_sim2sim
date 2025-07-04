@@ -1,20 +1,22 @@
-from typing import List, Optional
+from typing import List, Optional, Sequence
 
 import carb
 import numpy as np
 from omni.isaac.core.prims.rigid_prim import RigidPrim
 from omni.isaac.core.prims.xform_prim import XFormPrim
-from omni.isaac.core.robots.robot import Robot
+from omni.isaac.core.robots import Robot
 from omni.isaac.manipulators import SingleManipulator
-from omni.isaac.core.utils.prims import get_prim_at_path
+from omni.isaac.core.articulations.articulation import Articulation
+from omni.isaac.core.utils.prims import get_prim_at_path, define_prim
 from omni.isaac.core.utils.stage import add_reference_to_stage, get_stage_units
 from omni.isaac.manipulators.grippers.parallel_gripper import ParallelGripper
 from omni.isaac.nucleus import get_assets_root_path
+from omni.isaac.core.controllers.articulation_controller import ArticulationController
 
-from KTH.project_sweeping.src.articulation.ur5e import UR5e
+from IsaacLab_sim2sim.project_sweeping.src.articulation.ur5e import UR5e
 
 
-class UR5e_2f85(Robot):
+class UR5e_2f85(Articulation):
     """[summary]
 
     Args:
@@ -32,65 +34,43 @@ class UR5e_2f85(Robot):
     def __init__(
         self,
         prim_path: str,
-        name: str = "ur5e_robot",
-        usd_path: Optional[str] = None,
-        position: Optional[np.ndarray] = None,
-        orientation: Optional[np.ndarray] = None,
-        arm_dof_names: Optional[List[str]] = None,
+        name: str = "ur5e_2f85",
+        position: Optional[Sequence[float]] = None,
+        translation: Optional[Sequence[float]] = None,
+        orientation: Optional[Sequence[float]] = None,
         end_effector_prim_name: Optional[str] = None,
-        gripper_dof_names: Optional[List[str]] = None,
-        gripper_open_position: Optional[np.ndarray] = None,
-        gripper_closed_position: Optional[np.ndarray] = None,
-        articulation_controller=None,
-        deltas: Optional[np.ndarray] = None,
+        scale: Optional[Sequence[float]] = None,
+        visible: Optional[bool] = None,
+        gripper: ParallelGripper = None,
+        arm_dof_names: Optional[Sequence[str]]=None,
+        gripper_dof_names: Optional[Sequence[str]]=None,
+        gripper_open_position: Optional[Sequence[float]] = None,
+        gripper_closed_position: Optional[Sequence[float]] = None,
+        deltas: Optional[Sequence[float]] = None,
+        articulation_controller: Optional[ArticulationController] = None
     ) -> None:
-        prim = get_prim_at_path(prim_path)
         self._arm = None
         self._end_effector = None
         self._gripper = None
         self._end_effector_prim_name = end_effector_prim_name
-        self._position = np.array(position)
-        self._orientation = np.array(orientation)
-        if not prim.IsValid():
-            if usd_path:
-                add_reference_to_stage(usd_path=usd_path, prim_path=prim_path)
-            else:
-                # Nucleus root path
-                assets_root_path = "omniverse://localhost/Library/Shelf"
-                if assets_root_path is None:
-                    carb.log_error("Could not find Isaac Sim assets folder")
-                usd_path = assets_root_path + "/Robots/UR5e/UR5e_v3.usd"
-                add_reference_to_stage(usd_path=usd_path, prim_path=prim_path)
-            if self._end_effector_prim_name is None:
-                self._end_effector_prim_path = prim_path + "/robotiq_base_link"
-            else:
-                self._end_effector_prim_path = prim_path + "/" + end_effector_prim_name
-            if gripper_dof_names is None:
-                gripper_dof_names = ["finger_joint", "right_outer_knuckle_joint"]
-            if gripper_open_position is None:
-                gripper_open_position = np.array([0.0, 0.0]) / get_stage_units()
-            if gripper_closed_position is None:
-                gripper_closed_position = np.array([0.4, 0.4])
+        self._tcp_prim_path = prim_path + "/robotiq_base_link" + "/tcp"
+
+        if self._end_effector_prim_name is None:
+            self._end_effector_prim_path = prim_path + "/robotiq_base_link"
         else:
-            if self._end_effector_prim_name is None:
-                self._end_effector_prim_path = prim_path + "/robotiq_base_link"
-            else:
-                self._end_effector_prim_path = prim_path + "/" + end_effector_prim_name
-            if gripper_dof_names is None:
-                gripper_dof_names = ["finger_joint", "right_outer_knuckle_joint"]
-            if gripper_open_position is None:
-                gripper_open_position = np.array([0.0, 0.0]) / get_stage_units()
-            if gripper_closed_position is None:
-                gripper_closed_position = np.array([0.4, 0.4])
-        super().__init__(
-            prim_path=prim_path, name=name, position=position, orientation=orientation, articulation_controller=None
-        )
+            self._end_effector_prim_path = prim_path + "/" + end_effector_prim_name
+        if gripper_dof_names is None:
+            gripper_dof_names = ["finger_joint", "right_outer_knuckle_joint"]
+        if gripper_open_position is None:
+            gripper_open_position = np.array([0.0, 0.0]) / get_stage_units()
+        if gripper_closed_position is None:
+            gripper_closed_position = np.array([0.5, 0.5])
+        super().__init__(prim_path=prim_path, name=name, position=position, orientation=orientation, articulation_controller=articulation_controller)
         if arm_dof_names is not None:
             self._arm = UR5e(
                 arm_prim_path=prim_path,
                 joint_prim_names=arm_dof_names
             )
-
         if gripper_dof_names is not None:
             if deltas is None:
                 deltas = np.array([0.0, 0.0]) / get_stage_units()
@@ -101,9 +81,6 @@ class UR5e_2f85(Robot):
                 joint_closed_positions=gripper_closed_position,
                 action_deltas=deltas,
             )
-
-        self._tcp_prim_path = prim_path + "/robotiq_base_link" + "/tcp"
-
         return
 
     @property
@@ -157,12 +134,6 @@ class UR5e_2f85(Robot):
             dof_names=self.dof_names,
         )
         return
-
-    def get_robot_position(self) -> np.ndarray:
-        return self._position
-    
-    def get_robot_orientation(self) -> np.ndarray:
-        return self._orientation
     
     def post_reset(self) -> None:
         """[summary]"""

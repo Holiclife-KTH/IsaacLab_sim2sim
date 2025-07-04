@@ -1,0 +1,35 @@
+--- git status ---
+HEAD detached at e316b5c8a
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   source/extensions/omni.isaac.lab/omni/isaac/lab/envs/manager_based_env.py
+
+no changes added to commit (use "git add" and/or "git commit -a") 
+
+
+--- git diff ---
+diff --git a/source/extensions/omni.isaac.lab/omni/isaac/lab/envs/manager_based_env.py b/source/extensions/omni.isaac.lab/omni/isaac/lab/envs/manager_based_env.py
+index a84314bc8..edd9acaf1 100644
+--- a/source/extensions/omni.isaac.lab/omni/isaac/lab/envs/manager_based_env.py
++++ b/source/extensions/omni.isaac.lab/omni/isaac/lab/envs/manager_based_env.py
+@@ -80,9 +80,6 @@ class ManagerBasedEnv:
+         # initialize internal variables
+         self._is_closed = False
+ 
+-        # initialize target_object id
+-        self.target_id = 0
+-
+         # set the seed for the environment
+         if self.cfg.seed is not None:
+             self.cfg.seed = self.seed(self.cfg.seed)
+@@ -133,6 +130,9 @@ class ManagerBasedEnv:
+             self.viewport_camera_controller = ViewportCameraController(self, self.cfg.viewer)
+         else:
+             self.viewport_camera_controller = None
++            
++        # initialize target_object id
++        self.target_id = torch.zeros((self.scene.num_envs, 1), device=self.device)
+ 
+         # play the simulator to activate physics handles
+         # note: this activates the physics simulation view that exposes TensorAPIs

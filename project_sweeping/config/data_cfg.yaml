@@ -2,23 +2,24 @@ objects:
   bottle_1: omniverse://localhost/Library/Shelf/Object/Bottle_6.usd
   cup_1: omniverse://localhost/Library/Shelf/Object/Cup_1.usd
   cup_3: omniverse://localhost/Library/Shelf/Object/Cup_4.usd
+  can_1: omniverse://localhost/Library/Shelf/Object/Can_6.usd
   mug_1: omniverse://localhost/Library/Shelf/Object/Mug_2.usd
   mug_2: omniverse://localhost/Library/Shelf/Object/Mug_3.usd
-  can_1: omniverse://localhost/Library/Shelf/Object/Can_6.usd
+  
 
 pose:
   bottle_1: [-0.75, -0.2, 1.05, 1.0, 0.0, 0.0, 0.0]
   cup_1: [-0.75, 0.0, 1.05, 1.0, 0.0, 0.0, 0.0]
   cup_3: [-0.75, 0.2, 1.05, 1.0, 0.0, 0.0, 0.0]
-  mug_1: [-0.6, -0.2, 1.05, 1.0, 0.0, 0.0, 0.0]
-  mug_2: [-0.6, 0.0, 1.05, 1.0, 0.0, 0.0, 0.0]
-  can_1: [-0.6, 0.2, 1.05, 1.0, 0.0, 0.0, 0.0]
+  can_1: [-0.6, -0.2, 1.05, 1.0, 0.0, 0.0, 0.0]
+  mug_1: [-0.6, 0.0, 1.05, 1.0, 0.0, 0.0, 0.0]
+  mug_2: [-0.6, 0.2, 1.05, 1.0, 0.0, 0.0, 0.0]
 
 id:
   bottle_1: 0
   cup_1: 1
   cup_3: 2
-  mug_1: 3
-  mug_2: 4
-  can_1: 5
+  can_1: 3
+  mug_1: 4
+  mug_2: 5
 

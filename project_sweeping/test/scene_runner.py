@@ -20,7 +20,7 @@ from omni.isaac.core.utils.prims import create_prim
 import omni.isaac.core.utils.numpy.rotations as rot_utils
 from pxr import Sdf, Usd, UsdLux
 
-from KTH.project_sweeping.asset.ur5e_2f85 import UR5e
+from IsaacLab_sim2sim.project_sweeping.asset.ur5e_2f85 import UR5e
 
 # Argument parser
 def parse_arguments():

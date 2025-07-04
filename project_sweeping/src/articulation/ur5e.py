@@ -159,6 +159,7 @@ class UR5e(Articulation):
                 
         if control_actions.joint_efforts is not None:
             joint_actions.joint_efforts = [None] * self._articulation_num_dofs
-            joint_actions.joint_efforts[self._joint_dof_indicies[:]] = control_actions.joint_efforts[:]
+            for i in range(len(self._joint_prim_names)):
+                joint_actions.joint_efforts[self._joint_dof_indicies[i]] = control_actions.joint_efforts[i]
         self._articulation_apply_action_func(control_actions=joint_actions)
         return
